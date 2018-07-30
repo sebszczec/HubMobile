@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Hub Mobile</string>
+    <string name="ButtonText1">Button</string>
+    <string name="ButtonText2">Clicked</string>
 </resources>
