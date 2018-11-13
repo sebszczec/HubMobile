@@ -13,9 +13,8 @@ public class TcpClient {
     public static final String SERVER_IP = "94.177.161.113"; //server IP address
     public static final int SERVER_PORT = 6003;
 
-    // used to send messages
+    private Socket _socket;
     private PrintWriter _sendBuffer;
-    /* used to read messages from the server */
     private BufferedReader _readBuffer;
 
     public TcpClient() {
@@ -26,24 +25,34 @@ public class TcpClient {
             InetAddress serverAddress = InetAddress.getByName(SERVER_IP);
 
             Log.d("TcpClient", "Connecting...");
-            Socket socket = new Socket(serverAddress, SERVER_PORT);
+            this._socket = new Socket(serverAddress, SERVER_PORT);
 
             try {
                 //sends the message to the server
-                this._sendBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(socket.getOutputStream())), true);
+                this._sendBuffer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(this._socket.getOutputStream())), true);
 
                 //receives the message which the server sends back
-                this._readBuffer = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                this._readBuffer = new BufferedReader(new InputStreamReader(this._socket.getInputStream()));
 
             } catch (Exception e) {
                 Log.e("TcpClient", "Exception during buffers creation", e);
             } finally {
-                socket.close();
+                this._socket.close();
             }
         }
         catch (Exception e)
         {
             Log.e("TcpClient", "Exception when connecting", e);
+        }
+    }
+
+    public void stop() {
+        try {
+            this._socket.close();
+        }
+        catch (Exception e)
+        {
+            Log.e("TcpClient", "Exception when disconnecting", e);
         }
     }
 }
